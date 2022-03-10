@@ -1,0 +1,8 @@
+{
+    "canisters": {
+        "vote": {
+            "type": "motoko",
+            "main": "main.mo"
+        }
+    }
+}
