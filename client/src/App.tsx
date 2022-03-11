@@ -5,8 +5,7 @@ function App() {
   const { stoicConnect, plugConnect, actor } = useStore();
   if (actor) {
     console.log(actor);
-    // @ts-ignore
-    actor.readProposal(0);
+    actor.readProposals();
   }
   return (
     <div className="App">

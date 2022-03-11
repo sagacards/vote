@@ -3,13 +3,13 @@ import { StoicIdentity } from "ic-stoic-identity";
 import { Actor, ActorSubclass, HttpAgent } from '@dfinity/agent';
 import { IDL } from '@dfinity/candid';
 // @ts-ignore
-import { idlFactory } from './did/vote.did.js';
+import { Canister, idlFactory } from './did/vote.did.js';
 
 const canisterId = "sgymv-uiaaa-aaaaa-aaaia-cai";
 const host = "localhost:8000";
 
 interface Store {
-    actor?: Actor;
+    actor?: ActorSubclass<Canister>;
     stoicConnect: () => void;
     plugConnect: () => void;
 };
@@ -28,7 +28,7 @@ const useStore = create<Store>((set, get) => ({
             };
 
             // Create an actor canister
-            const actor = Actor.createActor(idlFactory, {
+            const actor = Actor.createActor<Canister>(idlFactory, {
                 agent: new HttpAgent({
                   identity,
                   host,
@@ -48,7 +48,7 @@ const useStore = create<Store>((set, get) => ({
         }
         
         await window.ic.plug.requestConnect({ whitelist: [canisterId], host })
-        const actor = await window?.ic?.plug?.createActor({
+        const actor = await window?.ic?.plug?.createActor<Canister>({
             canisterId,
             interfaceFactory: idlFactory,
         });
