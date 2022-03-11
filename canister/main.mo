@@ -150,6 +150,10 @@ shared ({ caller = creator }) actor class Canister() {
         proposals.get(id);
     };
 
+    public query func readProposals () : async [Proposal] {
+        Iter.toArray(proposals.vals());
+    };
+
     public shared ({ caller }) func updateProposal (
         id      : ProposalID,
         title   : ?Text,
