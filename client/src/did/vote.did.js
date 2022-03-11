@@ -60,6 +60,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'readProposal' : IDL.Func([ProposalID], [IDL.Opt(Proposal)], ['query']),
+    'readProposals' : IDL.Func([], [IDL.Vec(Proposal)], ['query']),
     'updateProposal' : IDL.Func(
         [ProposalID, IDL.Opt(IDL.Text), IDL.Opt(GenericType)],
         [Result_1],

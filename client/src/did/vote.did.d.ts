@@ -9,6 +9,7 @@ export interface Canister {
   'getVotes' : (arg_0: ProposalID) => Promise<Result_2>,
   'readList' : (arg_0: ProposalID) => Promise<[] | [Array<Allotment>]>,
   'readProposal' : (arg_0: ProposalID) => Promise<[] | [Proposal]>,
+  'readProposals' : () => Promise<Array<Proposal>>,
   'updateProposal' : (
       arg_0: ProposalID,
       arg_1: [] | [string],
