@@ -66,6 +66,7 @@ shared ({ caller = creator }) actor class Canister() {
         #VoteMax: ?Text;
         #VoteWrongType: ?Text;
         #ProposalNotFound: ?Text;
+        #Unauthorized;
     };
 
 
@@ -128,8 +129,10 @@ shared ({ caller = creator }) actor class Canister() {
     public shared ({ caller }) func createProposal (
         title   : Text,
         voteType: GenericType,
-    ) : async () {
-        assert(caller == admin);
+    ) : async Result.Result<(), Error> {
+        if (caller != admin) {
+            return #err(#Unauthorized);
+        };
         proposals.put(propID, {
             id = propID;
             title;
@@ -138,6 +141,7 @@ shared ({ caller = creator }) actor class Canister() {
         votes.put(propID, Buffer.Buffer<Vote>(0));
         lists.put(propID, []);
         propID += 1;
+        #ok();
     };
 
     public query func readProposal (
@@ -150,9 +154,11 @@ shared ({ caller = creator }) actor class Canister() {
         id      : ProposalID,
         title   : ?Text,
         voteType: ?GenericType,
-    ) : async ?Proposal {
-        assert(caller == admin);
-        do ? {
+    ) : async Result.Result<?Proposal, Error> {
+        if (caller != admin) {
+            return #err(#Unauthorized);
+        };
+        #ok(do ? {
             let prop = proposals.get(id)!;
             switch (title) {
                 case (?t) proposals.put(id, { id; title = t; voteType = prop.voteType; });
@@ -163,14 +169,17 @@ shared ({ caller = creator }) actor class Canister() {
                 case _ ();
             };
             prop;
-        };
+        });
     };
 
     public shared ({ caller }) func deleteProposal (
         id: ProposalID,
-    ) : async () {
-        assert(caller == admin);
+    ) : async Result.Result<(), Error> {
+        if (caller != admin) {
+            return #err(#Unauthorized);
+        };
         proposals.delete(id);
+        #ok()
     };
 
     // Lists
@@ -178,9 +187,12 @@ shared ({ caller = creator }) actor class Canister() {
     public shared ({ caller }) func createList (
         proposal    : ProposalID,
         list        : [Allotment],
-    ) : async () {
-        assert(caller == admin);
+    ) : async Result.Result<(), Error> {
+        if (caller != admin) {
+            return #err(#Unauthorized);
+        };
         lists.put(proposal, list);
+        #ok();
     };
 
     public query func readList (
