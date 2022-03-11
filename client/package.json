@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "did": "cp ../canister/.dfx/local/canisters/vote/vote.did.* ./src/did"
   },
   "dependencies": {
     "@dfinity/agent": "^0.10.3",
