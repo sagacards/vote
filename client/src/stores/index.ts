@@ -1,24 +1,56 @@
 import create from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware'
 import { StoicIdentity } from "ic-stoic-identity";
 import { Actor, ActorSubclass, HttpAgent } from '@dfinity/agent';
 import { IDL } from '@dfinity/candid';
 // @ts-ignore
-import { Canister, idlFactory } from './did/vote.did.js';
+import { Allotment, Canister, idlFactory, Proposal, Vote } from '../canisters/vote/vote.did.js';
+import CanisterIDs from '../canisters/vote/canister_ids.json';
+import { Principal } from '@dfinity/principal';
 
-const canisterId = "sgymv-uiaaa-aaaaa-aaaia-cai";
-const host = "localhost:8000";
+const canisterId = CanisterIDs.vote.local;
+const host = "http://localhost:8000";
 
 interface Store {
-    actor?: ActorSubclass<Canister>;
-    stoicConnect: () => void;
-    plugConnect: () => void;
+    actor?          : ActorSubclass<Canister>;
+    principal?      : Principal;
+    connected       : boolean;
+    connecting      : boolean;
+    idempotentConnect: () => null | (() => void);
+    stoicConnect    : () => void;
+    plugConnect     : () => void;
+
+    list?           : Allotment[];
+    proposal?       : Proposal;
+    proposals       : Proposal[];
+    votes           : Vote[];
+    fetchProposals  : () => void;
+    fetchProposal   : () => void;
+    fetchList       : () => void;
+    fetchVotes      : () => void;
 };
 
-const useStore = create<Store>((set, get) => ({
+const useStore = create<Store>(subscribeWithSelector((set, get) => ({
+
+
+    // Canister and Wallet connection
 
     actor: undefined,
+    connected: false,
+    connecting: false,
 
-    stoicConnect: async () => {
+    idempotentConnect () {
+        const { connecting } = get();
+        if (connecting) return null;
+        set({ connecting: true })
+        return () => set({ connecting: false });
+    },
+
+    async stoicConnect () {
+
+        const complete = get().idempotentConnect()
+        if (complete === null) return;
+
         StoicIdentity.load().then(async (identity : any) => {
             if (identity !== false) {
               // ID is a already connected wallet!
@@ -36,11 +68,16 @@ const useStore = create<Store>((set, get) => ({
                 canisterId,
             });
 
-            set(() => ({ actor }));
+            complete();
+            set(() => ({ actor, connected: true, principal: identity.getPrincipal() }));
         });
     },
 
-    plugConnect: async () => {
+    async plugConnect () {
+
+        const complete = get().idempotentConnect()
+        if (complete === null) return;
+
         // If the user doesn't have plug, send them to get it!
         if (window?.ic?.plug === undefined) {
             window.open('https://plugwallet.ooo/', '_blank');
@@ -53,10 +90,52 @@ const useStore = create<Store>((set, get) => ({
             interfaceFactory: idlFactory,
         });
 
-        set(() => ({ actor }));
+        const agent = await window.ic.plug.agent;
+        const principal = await agent.getPrincipal();
+
+        complete();
+        set(() => ({ actor, connected: true, principal }));
     },
 
-}));
+    // Store initialization
+
+    init () {},
+
+    // App things
+
+    proposals: [],
+    votes: [],
+
+    async fetchProposals () {
+        const { actor } = get();
+        if (!actor) return;
+        const proposals = await actor.readProposals();
+        set({ proposals })
+    },
+
+    async fetchProposal () {
+        const { actor } = get();
+        if (!actor) return;
+        const proposal = (await actor.readProposal(0))[0];
+        set({ proposal })
+    },
+
+    async fetchList () {
+        const { actor } = get();
+        if (!actor) return;
+        const list = (await actor.readList(0))[0];
+        set({ list });
+    },
+
+    async fetchVotes () {
+        const { actor } = get();
+        if (!actor) return;
+        const votes = await actor.getVotes(0);
+        // @ts-ignore: dfx doesn't generate result types properly...
+        if (votes.ok) set({ votes: votes.ok });
+    }
+
+})));
 
 export default useStore;
 

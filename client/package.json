@@ -3,15 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run cid && vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "did": "cp ../canister/.dfx/local/canisters/vote/vote.did.* ./src/did"
+    "cid": "cp ../canister/.dfx/local/canister_ids.json ./src/canisters/vote/",
+    "did": "cp ../canister/.dfx/local/canisters/vote/vote.did.* ./src/canisters/vote/"
   },
   "dependencies": {
     "@dfinity/agent": "^0.10.3",
     "@dfinity/identity": "^0.10.3",
     "@dfinity/principal": "^0.10.3",
+    "@fontsource/almendra": "^4.5.4",
+    "@fontsource/almendra-sc": "^4.5.2",
+    "@fontsource/inter": "^4.5.5",
     "ic-stoic-identity": "^2.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

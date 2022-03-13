@@ -18,7 +18,9 @@
     "baseUrl": ".",
     "paths": {
       "assets/*" : ["src/assets/*"],
-      "did/*" : ["src/did/*"],
+      "canisters/*" : ["src/canisters/*"],
+      "pages/*" : ["src/pages/*"],
+      "stores/*" : ["src/stores/*"],
       "ui/*" : ["src/ui/*"],
     }
   },
