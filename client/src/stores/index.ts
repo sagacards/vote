@@ -8,9 +8,9 @@ import { Allotment, Canister, idlFactory, Proposal, Vote } from '../canisters/vo
 import CanisterIDs from '../canisters/vote/canister_ids.json';
 import { Principal } from '@dfinity/principal';
 
-const canisterId = CanisterIDs.vote.local;
-const host = "http://localhost:8000";
 const isLocal = window.location.host.includes('localhost');
+const canisterId = isLocal ? CanisterIDs.vote.local : '';
+const host = isLocal ? "http://localhost:8000" : 'ic0.app';
 
 interface Store {
     actor?          : ActorSubclass<Canister>;
