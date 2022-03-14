@@ -19,6 +19,7 @@ interface Store {
     idempotentConnect: () => null | (() => void);
     stoicConnect    : () => void;
     plugConnect     : () => void;
+    disconnect      : () => void;
 
     list?           : Allotment[];
     proposal?       : Proposal;
@@ -84,7 +85,7 @@ const useStore = create<Store>(subscribeWithSelector((set, get) => ({
             return;
         }
         
-        await window.ic.plug.requestConnect({ whitelist: [canisterId], host })
+        await window.ic.plug.requestConnect({ whitelist: [canisterId], host }).catch(complete);
         const actor = await window?.ic?.plug?.createActor<Canister>({
             canisterId,
             interfaceFactory: idlFactory,
@@ -95,6 +96,12 @@ const useStore = create<Store>(subscribeWithSelector((set, get) => ({
 
         complete();
         set(() => ({ actor, connected: true, principal }));
+    },
+
+    disconnect () {
+        StoicIdentity.disconnect();
+        window.ic?.plug?.deleteAgent();
+        set({ connected: false, principal: undefined, actor: undefined });
     },
 
     // Store initialization

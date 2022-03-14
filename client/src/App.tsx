@@ -1,21 +1,18 @@
 import React from 'react'
 import HomePage from './pages/home';
 import Controller from './stores/controller'
-import useStore from './stores/index'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import ProposalsPage from './pages/proposals';
+import Top from './ui/top';
 
 function App() {
-  const { stoicConnect, plugConnect, proposals, connected, list, votes, proposal, principal } = useStore();
-
-  const allocation = React.useMemo(() => {
-    if (!list || !principal) return 0;
-    return list.find(a => a[0].toText() === principal.toText())?.[1] || 0
-  }, [list, principal]);
   
   return <>
     <Controller />
+    <Top />
     <Routes>
       <Route path="/" element={ <HomePage /> } />
+      <Route path="/proposals" element={ <ProposalsPage /> } />
     </Routes>
   </>
 }

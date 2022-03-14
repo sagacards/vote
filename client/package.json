@@ -15,6 +15,7 @@
     "@dfinity/principal": "^0.10.3",
     "@fontsource/almendra": "^4.5.4",
     "@fontsource/almendra-sc": "^4.5.2",
+    "@fontsource/cardo": "^4.5.3",
     "@fontsource/inter": "^4.5.5",
     "ic-stoic-identity": "^2.0.0",
     "react": "^17.0.2",
