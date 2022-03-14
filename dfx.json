@@ -1,0 +1,14 @@
+{
+    "canisters": {
+        "vote": {
+            "type": "motoko",
+            "main": "canister/main.mo"
+        },
+        "fe": {
+            "type": "assets",
+            "source": [
+                "client/dist"
+            ]
+        }
+    }
+}

@@ -3,7 +3,7 @@ import React from 'react';
 const legends = [
     {
         title: 'The High Preistess',
-        video: '/public/priestess-720.mov',
+        video: '/priestess-720.mov',
         poem: <>
             A parting veil, a whispered truth,<br />
             A turn into the secret and unknown<br />
@@ -23,7 +23,7 @@ const legends = [
     },
     {
         title: 'The Empress',
-        video: '/public/empress-720.mov',
+        video: '/empress-720.mov',
         poem: <>
             Greener hills do stretch before you<br />
             A summer's sunlit golden glade<br />
@@ -43,7 +43,7 @@ const legends = [
     },
     {
         title: 'The Emperor',
-        video: '/public/emperor-720.mov',
+        video: '/emperor-720.mov',
         poem: <>
             Dig down into that darkened earth <br />
             And meet the stern and solemn stone<br />
@@ -63,7 +63,7 @@ const legends = [
     },
     {
         title: 'The Hierophant',
-        video: '/public/hierophant-720.mov',
+        video: '/hierophant-720.mov',
         poem: <>
             Come now, traveler, to the pontifex<br />
             Where the Sacred Revealer guides you<br />
