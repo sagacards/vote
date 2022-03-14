@@ -15,13 +15,9 @@ interface Props {
 export default function ProposalsPage(props: Props) {
 
     const {
-        stoicConnect,
-        plugConnect,
-        proposals,
         connected,
         list,
         votes,
-        proposal,
         principal,
         disconnect,
     } = useStore();
@@ -62,9 +58,14 @@ export default function ProposalsPage(props: Props) {
                         <Button onClick={disconnect}>Disconnect</Button>
                     </>}
 
-                    {allocation > 0 && <p>
+                    {allocation > 0 && allocation - votes.length > 0 && <p>
                         You must now choose which of the four minting events you most want to participate in. You cannot change your votes once made, so choose wisely. Browse the four options and make your choice below.
                     </p>}
+
+                    {votes.length > 0 && <div>
+                        {/* @ts-ignore */}
+                        You picked: {votes.map(x => content[x?.[2].Nat8Content as unknown as number].title).join(', ')} 
+                    </div>}
                 </div>
 
                 {allocation > 0 && <div className={Styles.legends}>

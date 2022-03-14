@@ -10,6 +10,7 @@ import { Principal } from '@dfinity/principal';
 
 const canisterId = CanisterIDs.vote.local;
 const host = "http://localhost:8000";
+const isLocal = window.location.host.includes('localhost');
 
 interface Store {
     actor?          : ActorSubclass<Canister>;
@@ -60,12 +61,16 @@ const useStore = create<Store>(subscribeWithSelector((set, get) => ({
               identity = await StoicIdentity.connect();
             };
 
+            const agent = new HttpAgent({
+                identity,
+                host,
+            });
+
+            isLocal && agent.fetchRootKey();
+
             // Create an actor canister
             const actor = Actor.createActor<Canister>(idlFactory, {
-                agent: new HttpAgent({
-                  identity,
-                  host,
-                }),
+                agent,
                 canisterId,
             });
 
@@ -86,13 +91,15 @@ const useStore = create<Store>(subscribeWithSelector((set, get) => ({
         }
         
         await window.ic.plug.requestConnect({ whitelist: [canisterId], host }).catch(complete);
+
+        const agent = await window.ic.plug.agent;
+        isLocal && agent.fetchRootKey();
+        const principal = await agent.getPrincipal();
+
         const actor = await window?.ic?.plug?.createActor<Canister>({
             canisterId,
             interfaceFactory: idlFactory,
         });
-
-        const agent = await window.ic.plug.agent;
-        const principal = await agent.getPrincipal();
 
         complete();
         set(() => ({ actor, connected: true, principal }));
