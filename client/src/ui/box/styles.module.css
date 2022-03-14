@@ -1,0 +1,11 @@
+.root {
+    padding: 20px;
+    background: var(--black);
+    box-shadow: 0 0 0 1px var(--white-black-black);
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    line-height: 140%;
+}

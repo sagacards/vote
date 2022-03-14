@@ -1,0 +1,90 @@
+.root {
+    width: 100%;
+    align-self: flex-start;
+    padding-bottom: 4em;
+}
+
+.main {
+    padding-top: 62px;
+    gap: 30px;
+    max-width: 620px;
+    margin: 0 auto 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 140%;
+}
+
+.legends {
+    max-width: 780px;
+    margin: 0 auto;
+
+    position: relative;
+
+    box-shadow: 0 0 0 1px var(--white-black-black);
+}
+
+.nav {
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+
+    padding: 15px;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background: var(--black-black-white);
+    box-shadow: 0 0 0 1px var(--white-black-black);
+}
+
+.navItem {
+    text-transform: uppercase;
+    display: flex;
+    gap: 5px;
+    white-space: nowrap;
+    word-break: keep-all;
+    cursor: pointer;
+
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.legendContainer {
+    background: var(--black-white-white);
+}
+
+.legendTitle {
+    color: var(--gold);
+    font-size: 64px;
+    font-family: 'almendra sc';
+
+    padding: .5em .8em 0;
+}
+
+.legendPoem {
+    font-family: cardo;
+    font-size: 26px;
+    padding-left: 3em;
+    padding-right: 3em;
+}
+
+.legendGeneral {
+    font-size: 19px;
+    line-height: 140%;
+
+    padding: 0 1em;
+}
+
+.active {
+    box-shadow: 0 0 0 1px var(--white-white-black);
+}
+
+.number {
+    color: var(--white-white-black);
+}
