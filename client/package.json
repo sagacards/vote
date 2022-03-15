@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "cid": "cp ../.dfx/local/canister_ids.json ./src/canisters/vote/local.json && cp ../canister_ids.json ./src/canisters/vote/mainnet.json",
-    "did": "cp ../.dfx/local/canisters/vote/vote.did.* ./src/canisters/vote/local.json"
+    "did": "cp ../.dfx/local/canisters/vote/vote.did.* ./src/canisters/vote"
   },
   "dependencies": {
     "@dfinity/agent": "^0.10.3",
@@ -17,6 +17,7 @@
     "@fontsource/almendra-sc": "^4.5.2",
     "@fontsource/cardo": "^4.5.3",
     "@fontsource/inter": "^4.5.5",
+    "buffer": "^6.0.3",
     "ic-stoic-identity": "^2.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

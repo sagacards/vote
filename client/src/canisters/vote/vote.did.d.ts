@@ -1,5 +1,5 @@
 import type { Principal } from '@dfinity/principal';
-export type Allotment = [Principal, number];
+export type Allotment = [User, number];
 export interface Canister {
   'createList' : (arg_0: ProposalID, arg_1: Array<Allotment>) => Promise<
       Result
@@ -10,6 +10,7 @@ export interface Canister {
   'readList' : (arg_0: ProposalID) => Promise<[] | [Array<Allotment>]>,
   'readProposal' : (arg_0: ProposalID) => Promise<[] | [Proposal]>,
   'readProposals' : () => Promise<Array<Proposal>>,
+  'setAdmin' : (arg_0: Principal) => Promise<Result>,
   'updateProposal' : (
       arg_0: ProposalID,
       arg_1: [] | [string],
@@ -62,5 +63,7 @@ export type Result_1 = { 'ok' : [] | [Proposal] } |
   { 'err' : Error };
 export type Result_2 = { 'ok' : Array<Vote> } |
   { 'err' : Error };
-export type Vote = [ProposalID, Principal, GenericValue];
+export type User = { 'Address' : string } |
+  { 'Principal' : Principal };
+export type Vote = [ProposalID, User, GenericValue];
 export interface _SERVICE extends Canister {}

@@ -3,6 +3,9 @@ import Spinner from '../../ui/spinner';
 import useStore from '../../stores';
 import Button from '../button';
 import Styles from './styles.module.css'
+import { Principal } from '@dfinity/principal';
+// @ts-ignore
+import { principalToAccountIdentifier } from '../../aid'
 
 interface Props {
     children?: React.ReactNode;
@@ -20,7 +23,13 @@ export default function Legend (props : Props) {
 
     const allocation = React.useMemo(() => {
         if (!list || !principal) return undefined;
-        return list.find(a => a[0].toText() === principal.toText())?.[1] || 0
+        return list.find(a => {
+            if ((a[0] as { Principal : Principal }).Principal) {
+                return (a[0] as { Principal : Principal }).Principal.toText() === principal.toText()
+            } else {
+                return (a[0] as { Address : string }).Address === principalToAccountIdentifier(principal.toText(), 0);
+            }
+        })?.[1] || 0
     }, [list, principal]);
 
     const [voting, setVoting] = React.useState<boolean>(false);

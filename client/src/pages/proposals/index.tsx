@@ -7,6 +7,9 @@ import { Navigate } from 'react-router-dom'
 import Legend from '../../ui/legend'
 import content from '../../assets/content'
 import Button from '../../ui/button'
+// @ts-ignore
+import { principalToAccountIdentifier } from '../../aid'
+import { Principal } from '@dfinity/principal'
 
 interface Props {
     children?: React.ReactNode;
@@ -24,12 +27,20 @@ export default function ProposalsPage(props: Props) {
 
     const allocation = React.useMemo(() => {
         if (!list || !principal) return undefined;
-        return list.find(a => a[0].toText() === principal.toText())?.[1] || 0
+        return list.find(a => {
+            if ((a[0] as { Principal : Principal }).Principal) {
+                return (a[0] as { Principal : Principal }).Principal.toText() === principal.toText()
+            } else {
+                return (a[0] as { Address : string }).Address === principalToAccountIdentifier(principal.toText(), 0);
+            }
+        })?.[1] || 0
     }, [list, principal]);
 
     const [legend, setLegend] = React.useState(0);
 
     if (!connected) return <Navigate to="/" />
+
+    console.log(allocation, votes);
 
     return <div className={[Styles.root].join(' ')}>
 

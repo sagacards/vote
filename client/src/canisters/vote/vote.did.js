@@ -1,6 +1,10 @@
 export const idlFactory = ({ IDL }) => {
   const ProposalID = IDL.Nat32;
-  const Allotment = IDL.Tuple(IDL.Principal, IDL.Nat16);
+  const User = IDL.Variant({
+    'Address' : IDL.Text,
+    'Principal' : IDL.Principal,
+  });
+  const Allotment = IDL.Tuple(User, IDL.Nat16);
   const Error = IDL.Variant({
     'ProposalNotFound' : IDL.Opt(IDL.Text),
     'VoteMax' : IDL.Opt(IDL.Text),
@@ -41,7 +45,7 @@ export const idlFactory = ({ IDL }) => {
     'Principal' : IDL.Principal,
     'TextContent' : IDL.Text,
   });
-  const Vote = IDL.Tuple(ProposalID, IDL.Principal, GenericValue);
+  const Vote = IDL.Tuple(ProposalID, User, GenericValue);
   const Result_2 = IDL.Variant({ 'ok' : IDL.Vec(Vote), 'err' : Error });
   const Proposal = IDL.Record({
     'id' : ProposalID,
@@ -61,6 +65,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'readProposal' : IDL.Func([ProposalID], [IDL.Opt(Proposal)], ['query']),
     'readProposals' : IDL.Func([], [IDL.Vec(Proposal)], ['query']),
+    'setAdmin' : IDL.Func([IDL.Principal], [Result], []),
     'updateProposal' : IDL.Func(
         [ProposalID, IDL.Opt(IDL.Text), IDL.Opt(GenericType)],
         [Result_1],
