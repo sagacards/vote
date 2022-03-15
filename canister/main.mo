@@ -75,7 +75,7 @@ shared ({ caller = creator }) actor class Canister() {
     //////////
 
 
-    let admin = creator;
+    var admin = creator;
 
     let meta = {
         name = "Saga Legends Proposals";
@@ -184,6 +184,16 @@ shared ({ caller = creator }) actor class Canister() {
         };
         proposals.delete(id);
         #ok()
+    };
+
+    public shared ({ caller }) func setAdmin (
+        newAdmin : Principal
+    ) : async Result.Result<(), Error> {
+        if (caller != admin) {
+            return #err(#Unauthorized);
+        };
+        admin := newAdmin;
+        #ok();
     };
 
     // Lists
