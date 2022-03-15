@@ -241,9 +241,9 @@ shared ({ caller = creator }) actor class Canister() {
 
             case (?proposal, ?votes, ?list) {
                 
-                switch (Array.find<Allotment>(list, func ((p, _)) { switch (p) { case (#Principal(p)) { p == caller}; case (#Address(p)) { p == AId.fromPrincipal(caller) } } })) {
+                switch (Array.find<Allotment>(list, func ((p, _)) { userEqual(p, #Principal(caller)) })) {
                     case (?allot) {
-                        if (Nat16.fromNat(Array.filter<Vote>(votes.toArray(), func (a) { a.1 == caller }).size()) >= allot.1) {
+                        if (Nat16.fromNat(Array.filter<Vote>(votes.toArray(), func (a) { userEqual(a.1, #Principal(caller)) }).size()) >= allot.1) {
                             #err(#VoteMax(?"You have issued the maximum number of votes."));
                         } else {
                             // TODO: Type check votes
@@ -265,10 +265,36 @@ shared ({ caller = creator }) actor class Canister() {
     ) : async Result.Result<[Vote], Error> {
         switch (votes.get(proposal)) {
             case (?votes) {
-                #ok(Array.filter<Vote>(votes.toArray(), func (v) { v.1 == caller }));
+                #ok(Array.filter<Vote>(votes.toArray(), func (v) { userEqual(v.1, #Principal(caller)) }));
             };
             case _ #err(#ProposalNotFound(?"That Proposal does not exist."));
         }
+    };
+
+
+    //////////////
+    // Helpers //
+    ////////////
+
+
+    private func userEqual (
+        a : User,
+        b : User,
+    ) : Bool {
+        switch (a, b) {
+            case (#Principal(a), #Principal(b)) {
+                a == b;
+            };
+            case (#Address(a), #Address(b)) {
+                a == b;
+            };
+            case (#Address(a), #Principal(b)) {
+                a == AId.toText(AId.fromPrincipal(b, null));
+            };
+            case (#Principal(a), #Address(b)) {
+                AId.toText(AId.fromPrincipal(a, null)) == b;
+            };
+        };
     };
 
 }

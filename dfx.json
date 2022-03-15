@@ -1,5 +1,5 @@
 {
-    "version": "0.9.2",
+    "dfx": "0.9.2",
     "canisters": {
         "vote": {
             "type": "motoko",
