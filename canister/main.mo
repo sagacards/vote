@@ -6,6 +6,8 @@ import Nat16 "mo:base/Nat16";
 import Nat32 "mo:base/Nat32";
 import Result "mo:base/Result";
 
+import AId "mo:principal/blob/AccountIdentifier";
+
 
 shared ({ caller = creator }) actor class Canister() {
 
@@ -57,9 +59,14 @@ shared ({ caller = creator }) actor class Canister() {
         voteType    : GenericType;
     };
 
-    type Vote = (ProposalID, Principal, GenericValue);
+    type User = {
+        #Principal  : Principal;
+        #Address    : Text;
+    };
 
-    type Allotment = (Principal, Nat16);
+    type Vote = (ProposalID, User, GenericValue);
+
+    type Allotment = (User, Nat16);
 
     type Error = {
         #VoteUnauthorized: ?Text;
@@ -234,13 +241,13 @@ shared ({ caller = creator }) actor class Canister() {
 
             case (?proposal, ?votes, ?list) {
                 
-                switch (Array.find<Allotment>(list, func ((p, _)) { p == caller })) {
+                switch (Array.find<Allotment>(list, func ((p, _)) { switch (p) { case (#Principal(p)) { p == caller}; case (#Address(p)) { p == AId.fromPrincipal(caller) } } })) {
                     case (?allot) {
                         if (Nat16.fromNat(Array.filter<Vote>(votes.toArray(), func (a) { a.1 == caller }).size()) >= allot.1) {
                             #err(#VoteMax(?"You have issued the maximum number of votes."));
                         } else {
                             // TODO: Type check votes
-                            votes.add((proposal.id, caller, vote));
+                            votes.add((proposal.id, #Principal(caller), vote));
                             #ok();
                         };
                     };
