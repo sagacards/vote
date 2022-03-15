@@ -5,11 +5,12 @@ import { Actor, ActorSubclass, HttpAgent } from '@dfinity/agent';
 import { IDL } from '@dfinity/candid';
 // @ts-ignore
 import { Allotment, Canister, idlFactory, Proposal, Vote } from '../canisters/vote/vote.did.js';
-import CanisterIDs from '../canisters/vote/canister_ids.json';
+import LocalCanisterIDs from '../canisters/vote/local.json';
+import MainnetCanisterIDs from '../canisters/vote/mainnet.json';
 import { Principal } from '@dfinity/principal';
 
 const isLocal = window.location.host.includes('localhost');
-const canisterId = isLocal ? CanisterIDs.vote.local : '';
+const canisterId = isLocal ? LocalCanisterIDs.vote.local : '';
 const host = isLocal ? "http://localhost:8000" : 'ic0.app';
 
 interface Store {

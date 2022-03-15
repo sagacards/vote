@@ -6,8 +6,8 @@
     "dev": "npm run cid && vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "cid": "cp ../.dfx/local/canister_ids.json ./src/canisters/vote/",
-    "did": "cp ../.dfx/local/canisters/vote/vote.did.* ./src/canisters/vote/"
+    "cid": "cp ../.dfx/local/canister_ids.json ./src/canisters/vote/local.json && cp ../canister_ids.json ./src/canisters/vote/mainnet.json",
+    "did": "cp ../.dfx/local/canisters/vote/vote.did.* ./src/canisters/vote/local.json"
   },
   "dependencies": {
     "@dfinity/agent": "^0.10.3",
