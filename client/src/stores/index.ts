@@ -10,7 +10,7 @@ import MainnetCanisterIDs from '../canisters/vote/mainnet.json';
 import { Principal } from '@dfinity/principal';
 
 const isLocal = window.location.host.includes('localhost');
-const canisterId = isLocal ? LocalCanisterIDs.vote.local : '';
+const canisterId = isLocal ? LocalCanisterIDs.vote.local : MainnetCanisterIDs.vote.ic;
 const host = isLocal ? "http://localhost:8000" : 'ic0.app';
 
 interface Store {
